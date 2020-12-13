@@ -3,7 +3,7 @@ const { body, validationResult } = require('express-validator');
 const createHttpError = require('http-errors');
 const router = new express.Router();
 
-class containers {
+class Containers {
     constructor(location, drawer, id) {
         this.location = location;
         this.drawer = drawer;
@@ -36,11 +36,40 @@ router.post('/',
         const drawer = req.body.drawer;
         const id = req.body.id;
 
-        const newItems = new containers(location, drawer, id);
+        const newItems = new Containers(location, drawer, id);
         container.push(newItems);
         console.log(container);
-        res.redirect('/item/new');
+        res.redirect('/container/new');
     });
 
+router.get('/location', (req, res, next) => {
+    const allLocations = container.map(containers => containers.location);
+    const uniqueLocations = [];
+    allLocations.forEach(location => {
+        if (uniqueLocations.indexOf(location) < 0) {
+            uniqueLocations.push(location);
+
+        }
+
+    });
+    uniqueLocations.sort();
+    res.json(uniqueLocations);
+});
+
+
+router.get('/drawer', (req, res, next) => {
+    const allDrawer = container.map(containers => containers.drawer);
+    const uniqueDrawer = [];
+    allDrawer.forEach(drawer => {
+        if (uniqueDrawer.indexOf(drawer) < 0) {
+            uniqueDrawer.push(drawer);
+
+        }
+
+    });
+    uniqueDrawer.sort();
+    res.json(uniqueDrawer);
+
+});
 
 module.exports = router;
